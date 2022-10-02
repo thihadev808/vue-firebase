@@ -1,0 +1,40 @@
+$mq-breakpoints: (
+	"min": 320px,
+	"xxsmall": 375px,
+	"xsmall": 560px,
+	"small": 760px,
+	"medium": 960px,
+	"large": 1280px,
+	"big": 1366px,
+	"xlarge": 1520px,
+	"xxlarge": 1600px,
+	"max": 1920px,
+	"huge": 2160px,
+);
+
+// color
+// $color-primary: #26a784;
+$color-primary: #7736e6;
+
+// margin / padding
+$size-xs: 4px;
+$size-s: 8px;
+$size-m: 16px;
+$size-l: 24px;
+$size-xl: 32px;
+
+// font
+$font-dance: "Dancing Script", "Shippori Mincho", "Hiragino Kaku Gothic ProN",
+	Meiryo, sans-serif;
+$font-en: "Open Sans", "Shippori Mincho", "Hiragino Kaku Gothic ProN", Meiryo,
+	sans-serif;
+
+/*
+  ease
+  01, 02: opacity,color
+  03, 04: transform
+*/
+$ease-01: cubic-bezier(0.26, 0.06, 0, 1);
+$ease-02: cubic-bezier(0.18, 0.06, 0.23, 1);
+$ease-03: cubic-bezier(0.43, 0.05, 0.17, 1);
+$ease-04: cubic-bezier(0.55, 0.05, 0.22, 0.99);

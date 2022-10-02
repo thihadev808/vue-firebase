@@ -1,0 +1,32 @@
+@use "./variable" as *;
+@use "./mixin" as *;
+
+.u-font_dance {
+	font-family: $font-dance;
+}
+
+.u-font_en {
+	font-family: $font-en;
+}
+
+@include mq(medium) {
+	.u-sp {
+		display: none;
+	}
+}
+
+@include mq(medium, max) {
+	.u-pc {
+		display: none;
+	}
+}
+
+// .u-tab をマルチクラスで付与することで TAB サイズで PC の要素を表示可能.
+@include mq-and(small, medium) {
+	.u-sp.u-tab {
+		display: none;
+	}
+	.u-pc.u-tab {
+		display: block;
+	}
+}

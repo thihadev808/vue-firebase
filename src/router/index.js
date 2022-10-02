@@ -1,25 +1,66 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHistory } from "vue-router";
+import HomeView from "../views/HomeView.vue";
+import { auth } from "../firebase";
+import store from "../store";
 
 const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
-]
+	{
+		path: "/",
+		name: "home",
+		component: HomeView,
+		meta: {
+			requiresAuth: true,
+		},
+	},
+	{
+		path: "/add",
+		name: "add",
+		component: () => import("../views/AddView.vue"),
+		meta: {
+			requiresAuth: true,
+		},
+	},
+	{
+		path: "/books/:bookId",
+		name: "edit",
+		component: () => import("../views/EditView.vue"),
+		meta: {
+			requiresAuth: true,
+		},
+	},
+	{
+		path: "/login",
+		name: "login",
+		component: () => import("../views/LoginView.vue"),
+	},
+	{
+		path: "/register",
+		name: "register",
+		component: () => import("../views/RegisterView.vue"),
+	},
+];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+	history: createWebHistory(process.env.BASE_URL),
+	routes,
+});
 
-export default router
+router.beforeEach((to, from, next) => {
+	store.commit("CLOSE_HEADER");
+
+	// ログインしてたらトップに進む
+	if (to.path == "login" && auth.currentUser) {
+		next("/");
+		return;
+	}
+
+	// ログインしてなかったらログインページに戻す
+	if (to.matched.some((path) => path.meta.requiresAuth) && !auth.currentUser) {
+		next("/login");
+		return;
+	}
+
+	next();
+});
+
+export default router;

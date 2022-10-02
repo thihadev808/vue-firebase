@@ -1,0 +1,200 @@
+@use "./variable" as *;
+
+// @media screen and (min-width: XXXXpx)
+@mixin mq($breakpoint: medium, $rule: min, $direction: width) {
+	$breakpoint: map_get($mq-breakpoints, $breakpoint);
+	@if $rule == max {
+		$breakpoint: $breakpoint - 1;
+	}
+	@media screen and (#{$rule}-#{$direction}: $breakpoint) {
+		@content;
+	}
+}
+
+// @media screen and (min-width: XXXXpx) and (max-width: XXXXpx)
+@mixin mq-and(
+	$breakpoint-01: medium,
+	$breakpoint-02: large,
+	$rule-01: min,
+	$rule-02: max,
+	$direction-01: width,
+	$direction-02: width
+) {
+	$breakpoint-01: map_get($mq-breakpoints, $breakpoint-01);
+	$breakpoint-02: map_get($mq-breakpoints, $breakpoint-02);
+	@if $rule-01 == max {
+		$breakpoint-01: $breakpoint-01 - 1;
+	}
+	@if $rule-02 == max {
+		$breakpoint-02: $breakpoint-02 - 1;
+	}
+	@media screen and (#{$rule-01}-#{$direction-01}: $breakpoint-01) and (#{$rule-02}-#{$direction-02}: $breakpoint-02) {
+		@content;
+	}
+}
+
+// @media screen and (min-width: XXXXpx) and (max-width: XXXXpx)
+@mixin mq-or(
+	$breakpoint-01: medium,
+	$breakpoint-02: large,
+	$rule-01: min,
+	$rule-02: max,
+	$direction-01: width,
+	$direction-02: width
+) {
+	$breakpoint-01: map_get($mq-breakpoints, $breakpoint-01);
+	$breakpoint-02: map_get($mq-breakpoints, $breakpoint-02);
+	@if $rule-01 == max {
+		$breakpoint-01: $breakpoint-01 - 1;
+	}
+	@if $rule-02 == max {
+		$breakpoint-02: $breakpoint-02 - 1;
+	}
+	@media screen and (#{$rule-01}-#{$direction-01}: $breakpoint-01), screen and (#{$rule-02}-#{$direction-02}: $breakpoint-02) {
+		@content;
+	}
+}
+
+// @media screen and (max-width: XXXXpx)
+@mixin mq-max($breakpoint: medium, $rule: max, $direction: width) {
+	$breakpoint: map_get($mq-breakpoints, $breakpoint);
+	@if $rule == max {
+		$breakpoint: $breakpoint - 1;
+	}
+	@media screen and (#{$rule}-#{$direction}: $breakpoint) {
+		@content;
+	}
+}
+
+// IE, Edge CSS hack
+@mixin hackIE() {
+	@at-root _:-ms-lang(x),
+		& {
+		@content;
+	}
+}
+
+// border で arrow 作成.
+@mixin arrow($size: 8px) {
+	&::after {
+		content: "";
+		display: block;
+		width: $size;
+		height: $size;
+		border: solid $txt-color;
+		border-width: 1px 1px 0 0;
+		transform: rotate(45deg);
+	}
+}
+
+// 先頭にインデントをつける.
+// \30FB: ナカグロ "・" の Unicode
+@mixin txt-indent($content: "\30FB") {
+	padding-left: 1.125em;
+	position: relative;
+	&::before {
+		content: $content;
+		display: block;
+		position: absolute;
+		left: 0;
+		top: 0;
+	}
+}
+
+// linear-gradient での点線.
+@mixin dashed-border($position: bottom, $color: #cccccc) {
+	position: relative;
+	&::after {
+		content: "";
+		display: block;
+		width: 100%;
+		height: 2px;
+		background: linear-gradient(
+			to right,
+			$color 2px,
+			transparent 0px,
+			transparent 4px
+		);
+		background-repeat: repeat-x;
+		background-size: 7px 2px;
+		position: absolute;
+		left: 0;
+		@if $position == top {
+			top: 0;
+		}
+		@if $position == bottom {
+			bottom: 0;
+		}
+	}
+}
+
+@mixin flex-center() {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+// justify-content: space-between を左揃えにする.
+@mixin flex-align-left($width: 25%) {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	&::before,
+	&::after {
+		content: "";
+		display: block;
+		width: $width;
+		height: 0;
+	}
+	&::before {
+		order: 1;
+		// order: -1 で先頭, order: 1 で最後.
+	}
+}
+
+// スクロールバー非表示.
+@mixin hide-scroll-bar() {
+	-ms-overflow-style: none; // IE, Edge
+	scrollbar-width: none; // Firefox
+	&::-webkit-scrollbar {
+		display: none; // Chrome, Safari
+	}
+}
+
+// SP サイズの :active と :hover, :focus の演出を同じにする.
+@mixin hover() {
+	@include mq(medium, max) {
+		&:active {
+			@content;
+		}
+	}
+	@include mq(medium) {
+		&:hover,
+		&:focus {
+			@content;
+		}
+	}
+}
+
+@mixin hover-svg($color: #2962ff) {
+	g,
+	path {
+		stroke: $color;
+	}
+}
+
+@mixin hover-shadow() {
+	transition: 0.6s $ease-out;
+	transition-property: box-shadow, transform;
+	&:hover {
+		box-shadow: 0 4px 12px 0 rgba(#5f58ff, 0.12);
+		transform: scale(1.016) translate3d(0, 0, 0);
+		transition-duration: 0.4s;
+	}
+	@include hackIE() {
+		&:hover {
+			// IE での transform: scale() がガタガタして気持ち悪い...
+			transform: none;
+		}
+	}
+}

@@ -1,0 +1,47 @@
+@use "./foundation" as *;
+
+/* vue-toastification Override */
+
+.Vue-Toastification__container.takeAMemo {
+	// width: calc(100% - 32px);
+	padding: 0 24px;
+	.Vue-Toastification__toast {
+		cursor: pointer;
+		min-width: auto;
+		min-height: auto;
+		background: #1e2024;
+		border-radius: 6px;
+		font-family: inherit;
+		padding: 16px;
+		margin-bottom: 24px;
+	}
+	.Vue-Toastification__icon {
+		width: 16px;
+		margin-right: 12px;
+	}
+	.Vue-Toastification__toast-body {
+		font-size: 12px;
+		line-height: 1.5;
+	}
+	.Vue-Toastification__close-button {
+		display: none;
+	}
+
+	.Vue-Toastification__toast--success svg * {
+		fill: #26a784;
+	}
+
+	.Vue-Toastification__fade-leave-active,
+	.Vue-Toastification__fade-enter-active {
+		animation-duration: 160ms;
+	}
+}
+
+@keyframes fadeOutBottom {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
